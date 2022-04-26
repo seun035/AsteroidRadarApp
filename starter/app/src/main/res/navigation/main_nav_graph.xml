@@ -12,6 +12,9 @@
         <action
             android:id="@+id/action_showDetail"
             app:destination="@id/detailFragment" />
+        <argument
+            android:name="asteroid"
+            app:argType="com.udacity.asteroidradar.Asteroid" />
     </fragment>
 
     <fragment
