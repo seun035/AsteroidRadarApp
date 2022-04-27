@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.*
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.AsteroidType
+import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.repositories.AsteroidRepository
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -14,7 +15,7 @@ import java.time.format.DateTimeFormatter
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = AsteroidRepository(application.applicationContext)
     private var asteroidFilter = MutableLiveData<AsteroidType>(AsteroidType.NEXTWEEK)
-    private var _pictureOfTheDayUrl = MutableLiveData<String>()
+    private var _pictureOfTheDay = MutableLiveData<PictureOfDay>()
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -42,23 +43,26 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         get() {
             return _asteroidList
         }
-    val pictureOfTheDayUrl: LiveData<String>
+    val pictureOfTheDay: LiveData<PictureOfDay>
         get() {
-            return _pictureOfTheDayUrl
+            return _pictureOfTheDay
         }
 
     init {
-        var query = HashMap<String, String>()
 
-        viewModelScope.launch {
-            repository.refreshAsteroidInfo()
+        try {
+            viewModelScope.launch {
+                repository.refreshAsteroidInfo()
+            }
+
+            viewModelScope.launch {
+                var result = repository.getImageOfTheDay()
+                _pictureOfTheDay.value = result
+            }
+
+        }catch (ex: Exception){
+
         }
-
-        viewModelScope.launch {
-            var result = repository.getImageOfTheDay()
-            _pictureOfTheDayUrl.value = result.url
-        }
-
     }
 
     fun setFilter(asteroidType: AsteroidType){

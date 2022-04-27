@@ -9,17 +9,21 @@ import com.squareup.picasso.Picasso
 fun bindAsteroidStatusImage(imageView: ImageView, isHazardous: Boolean) {
     if (isHazardous) {
         imageView.setImageResource(R.drawable.ic_status_potentially_hazardous)
+        imageView.contentDescription = imageView.context.getString(R.string.potentially_hazardous_asteroid_image)
     } else {
         imageView.setImageResource(R.drawable.ic_status_normal)
+        imageView.contentDescription = imageView.context.getString(R.string.not_hazardous_asteroid_image)
     }
 }
 
 @BindingAdapter("pictureOfTheDay")
-fun bindPictureOfTheDay(imageView: ImageView, url: String?) {
- if (!url.isNullOrEmpty()){
-     Picasso.with(imageView.context).load(url).into(imageView)
+fun bindPictureOfTheDay(imageView: ImageView, pictureOfDay: PictureOfDay?) {
+ if (pictureOfDay != null){
+     Picasso.with(imageView.context).load(pictureOfDay.url).into(imageView)
+     imageView.contentDescription = pictureOfDay.title
  }else{
      imageView.setImageResource(R.drawable.placeholder_picture_of_day)
+     imageView.contentDescription = imageView.context.getString(R.string.this_is_nasa_s_picture_of_day_showing_nothing_yet)
  }
 }
 
@@ -27,8 +31,10 @@ fun bindPictureOfTheDay(imageView: ImageView, url: String?) {
 fun bindDetailsStatusImage(imageView: ImageView, isHazardous: Boolean) {
     if (isHazardous) {
         imageView.setImageResource(R.drawable.asteroid_hazardous)
+        imageView.contentDescription = imageView.context.getString(R.string.potentially_hazardous_asteroid_image)
     } else {
         imageView.setImageResource(R.drawable.asteroid_safe)
+        imageView.contentDescription = imageView.context.getString(R.string.not_hazardous_asteroid_image)
     }
 }
 
